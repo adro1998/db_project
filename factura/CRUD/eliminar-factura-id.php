@@ -1,5 +1,5 @@
 <?php
-    include($_SERVER['DOCUMENT_ROOT']."/db-project/cliente/CRUD/cliente-service.php");
-    $nuevo = new Cliente_Service();
-    $nuevo->borrar_Cliente($_POST["cedula"]);
+    include($_SERVER['DOCUMENT_ROOT']."/db-project/factura/CRUD/factura-service.php");
+    $nuevo = new Factura_Service();
+    $nuevo->borrar_factura($_POST["id"]);
 ?>

@@ -1,64 +1,87 @@
 <?php
     require $_SERVER['DOCUMENT_ROOT'] ."\db-project\conexion.php" ;
-    class Cliente_Service{
-        public function insertar_cliente ($cedula, $nombre, $correo){
+    class Factura_Service{
+        public function insertar_factura ($id, $fecha, $codigo_empresa, $cliente_cedula){
                 $conne = Conectar::conn();
-                $sql = "INSERT INTO cliente VALUES ('$cedula', '$nombre', '$correo')";
-                if(!mysqli_query($conne, $sql)){
-                    echo "Se ha producido un error al registrar el cliente <br>";
-                    echo $conne -> errno ."=". $conne -> error ."<br>";
+                if ($codigo_empresa == '' && $cliente_cedula <> '') {
+                    $sql = "INSERT INTO factura(id, fecha, cliente_cedula)  VALUES ('$id', '$fecha', '$cliente_cedula')";
+                    if(!mysqli_query($conne, $sql)){
+                        echo "Se ha producido un error al registrar la factura <br>";
+                        echo $conne -> errno ."=". $conne -> error ."<br>";
+                        echo "<button onClick='history.back()'>Regresar</button>";
+                    }
+                    else{
+                        echo    "<script type='text/javascript'>
+                                    alert('La factura ha sido registrado correctamente');
+                                    window.history.go(-1);
+                                </script>";
+                    }
+                }
+                else if ($cliente_cedula = '' && $codigo_empresa <> '') {
+                    $sql = "INSERT INTO factura(id, fecha, codigo_empresa)  VALUES ('$id', '$fecha', '$codigo_empresa')";
+                    if(!mysqli_query($conne, $sql)){
+                        echo "Se ha producido un error al registrar la factura <br>";
+                        echo $conne -> errno ."=". $conne -> error ."<br>";
+                        echo "<button onClick='history.back()'>Regresar</button>";
+                    }
+                    else{
+                        echo    "<script type='text/javascript'>
+                                    alert('La factura ha sido registrado correctamente');
+                                    window.history.go(-1);
+                                </script>";
+                    }
+                }else{
+                    echo "Por favor ingrese cedula del cliente o codigo de la empresa <br>";
                     echo "<button onClick='history.back()'>Regresar</button>";
                 }
-                else{
-                    echo    "<script type='text/javascript'>
-                                alert('El cliente ha sido registrado correctamente');
-                                window.history.go(-1);
-                            </script>";
-                }
+                
+                
 
         }
 
-        public function mostrar_cliente(){
+        public function mostrar_factura(){
             $conne = Conectar::conn();
-            $sql = "SELECT cedula, nombre, correo FROM `cliente`";
+            $sql = "SELECT id, fecha, codigo_empresa, cliente_cedula FROM `factura`";
 
             $datos = mysqli_query($conne, $sql);
 
             if(($conne -> error)){
-                echo "Se ha producido un error al consultar la informacion de los clientes <br>";
+                echo "Se ha producido un error al consultar la informacion de las facturas <br>";
                 echo $conne -> errno ."=". $conne -> error ."<br>";
             }
             else{
                 echo "<table>";
                     echo "<tr>";
-                        echo "<td><b>Cedula</b></td>";
-                        echo "<td><b>Nombre</b></td>";
-                        echo "<td><b>Correo</b></td>";
+                        echo "<td><b>Id</b></td>";
+                        echo "<td><b>Fecha</b></td>";
+                        echo "<td><b>Código Empresa</b></td>";
+                        echo "<td><b>Cedula del cliente</b></td>";
                     echo "</tr>";
                 while ($fila =mysqli_fetch_array($datos)){
                     echo "<tr>";
-                        echo "<td>".$fila ["cedula"]."</td>";
-                        echo "<td>".$fila ["nombre"]."</td>";
-                        echo "<td>".$fila ["correo"]."</td>";
+                        echo "<td>".$fila ["id"]."</td>";
+                        echo "<td>".$fila ["fecha"]."</td>";
+                        echo "<td>".$fila ["codigo_empresa"]."</td>";
+                        echo "<td>".$fila ["cliente_cedula"]."</td>";
                     echo "</tr>";
                 }
                 echo "</table>";
             }
         }
 
-        public function borrar_cliente ($cedula){
+        public function borrar_factura ($id){
             $conne = Conectar::conn();
             $sql = "DELETE  
-                      FROM cliente 
-                     WHERE cliente.cedula = $cedula";
+                      FROM factura 
+                     WHERE factura.id = $id";
                 if(!mysqli_query($conne, $sql)){
-                    echo "Se ha producido un error al eliminar el cliente <br>";
+                    echo "Se ha producido un error al eliminar la factura <br>";
                     echo $conne -> errno ."=". $conne -> error ."<br>";
                     echo "<button onClick='history.back()'>Regresar</button>";
                 }
                 else{
                     echo    "<script type='text/javascript'>
-                                alert('El Cliente ha sido borrado correctamente');
+                                alert('La factura ha sido borrado correctamente');
                                 window.history.go(-1);
                             </script>";
                 }
